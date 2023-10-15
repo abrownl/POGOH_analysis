@@ -114,3 +114,14 @@ plt.savefig(os.path.join(dirpath, "figures", "rides_by_month_and_ridertype.png")
 # rides by location (POGOH only)
 
 rides_loc = rides_cln[ rides_cln["Start Yr-Mon"] >= "2022-05" ]
+rides_loc = rides_loc.groupby("Start Station Name").size()
+rides_loc = rides_loc.sort_values(ascending=False)
+
+y_pos = np.arange(len(rides_loc))
+stns = rides_loc.index
+rentals = rides_loc
+
+fig, ax = plt.subplots()
+ax.barh(stns[0:10], rentals[0:10])
+ax.invert_yaxis()
+
