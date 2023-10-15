@@ -94,8 +94,8 @@ plt.savefig(os.path.join(dirpath, "figures", "rides_per_month.png"), bbox_inches
 
 
 # rides per month by rider type (POGOH only)
-rides_22_23 = rides_cln[ rides_cln["Start Yr-Mon"] >= "2022-05" ]
-rides_22_23 = rides_22_23.groupby(['Start Yr-Mon', 'Rider Type'], as_index=False)["Duration"].count()
+rides_pogoh = rides_cln[ rides_cln["Start Yr-Mon"] >= "2022-05" ]
+rides_22_23 = rides_pogoh.groupby(['Start Yr-Mon', 'Rider Type'], as_index=False)["Duration"].count()
 
 x = rides_22_23[ rides_22_23["Rider Type"] == "CASUAL"]["Start Yr-Mon"]
 y_cas = rides_22_23[ rides_22_23["Rider Type"] == "CASUAL"]["Duration"]
@@ -111,17 +111,24 @@ plt.savefig(os.path.join(dirpath, "figures", "rides_by_month_and_ridertype.png")
 
 #%%
 
-# rides by location (POGOH only)
+# rides by location (july, aug, sept 23 only)
 
-rides_loc = rides_cln[ rides_cln["Start Yr-Mon"] >= "2022-05" ]
-rides_loc = rides_loc.groupby("Start Station Name").size()
-rides_loc = rides_loc.sort_values(ascending=False)
+rides_sept23 = rides_cln[ rides_cln["Start Yr-Mon"] == "2023-09" ]
 
-y_pos = np.arange(len(rides_loc))
-stns = rides_loc.index
-rentals = rides_loc
+rides_loc = rides_sept23.groupby(["Start Station Name"], as_index=False).size()
+rides_loc = rides_loc.sort_values(by=['size'], ascending=False)
 
-fig, ax = plt.subplots()
-ax.barh(stns[0:10], rentals[0:10])
+stns = rides_loc["Start Station Name"]
+rentals = rides_loc["size"]
+
+fig, ax = plt.subplots(figsize=(5,10))
+ax.barh(stns, rentals)
 ax.invert_yaxis()
+plt.yticks(fontsize=8)
+plt.savefig(os.path.join(dirpath, "figures", "rides_by_loc_sept23.png"), bbox_inches='tight')
 
+# avg ride duration by location (pogoh only)
+
+rides_loc_dur = rides_pogoh.groupby("Start Station Name")["Duration"].agg(['mean','median'])
+rides_loc_dur[["mean", "median"]] = rides_loc_dur[["mean", "median"]]/60
+rides_loc_dur = rides_loc_dur.sort_values(by = "median")
