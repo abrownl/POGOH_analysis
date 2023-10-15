@@ -24,8 +24,9 @@ drop_index = data[ ((data["Duration"] < 60) |
                     (data["Closed Status"] == "FORCED_CLOSED")) ].index  
 rides = data.drop(drop_index)
 
+#%% 
 
-# some exploration. scatterplots of ride durations!
+# scatterplots of ride durations
 for yr in range(2015, 2024):
     filename = "ride_dur_" + str(yr) + ".png"
     savepath = os.path.join(dirpath, "figures", filename)
@@ -46,7 +47,7 @@ drop_index = rides[ rides["Duration"] > 175000 ].index
 rides_cln = rides.drop(drop_index)
 
 
-# plot histograms of rides
+# plot histograms of ride durations
 plt.hist(rides_cln["Duration"], bins=100)
 plt.savefig(os.path.join(dirpath, "figures", "rides_hist.png"))
 
@@ -77,7 +78,6 @@ rides_sd = rides_cln["Duration"].std()
 
 #%%
 
-
 # rides by month
 rides_by_month = rides_cln.groupby(["Start Yr-Mon"])["Start Yr-Mon"].size()
 
@@ -92,11 +92,11 @@ plt.xticks(np.arange(1,100,step=6),rotation = 90)
 plt.title("POGOH Rides by Month")
 plt.savefig(os.path.join(dirpath, "figures", "rides_per_month.png"), bbox_inches="tight")
 
+
+# rides per month by rider type (POGOH only)
 rides_22_23 = rides_cln[ rides_cln["Start Yr-Mon"] >= "2022-05" ]
 rides_22_23 = rides_22_23.groupby(['Start Yr-Mon', 'Rider Type'], as_index=False)["Duration"].count()
 
-
-# rides per month by rider type (POGOH only)
 x = rides_22_23[ rides_22_23["Rider Type"] == "CASUAL"]["Start Yr-Mon"]
 y_cas = rides_22_23[ rides_22_23["Rider Type"] == "CASUAL"]["Duration"]
 y_mem = rides_22_23[ rides_22_23["Rider Type"] == "MEMBER"]["Duration"]
@@ -107,3 +107,10 @@ plt.plot(x, y_mem, label="Member")
 plt.xticks(rotation = 90)
 plt.legend(loc="upper left")
 plt.savefig(os.path.join(dirpath, "figures", "rides_by_month_and_ridertype.png"), bbox_inches="tight")
+
+
+#%%
+
+# rides by location (POGOH only)
+
+rides_loc = rides_cln[ rides_cln["Start Yr-Mon"] >= "2022-05" ]
