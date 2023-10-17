@@ -20,7 +20,7 @@ trips_cln = trips_cln.drop(columns = {"Unnamed: 0"})
 
 stns_by_mon = pd.read_csv(os.path.join("data", "processed", "stations_by_month.csv"))
 stns_by_mon = stns_by_mon.rename(columns = {"Unnamed: 0":"Date"})
-#%% 
+
 
 trips_cln["Duration"].describe()
 
@@ -60,7 +60,7 @@ plt.savefig(os.path.join("visualizations", "v_long_rides.png"))
 
 
 
-#%%
+
 
 # rides by month
 trips_by_month = trips_cln.groupby(["Start Yr-Mon"])["Start Yr-Mon"].size()
@@ -97,7 +97,7 @@ plt.title("Number of Trips per Month, by Customer Type")
 plt.savefig(os.path.join("visualizations", "rides_by_month_and_ridertype.png"), bbox_inches="tight")
 
 
-#%%
+
 
 # number of rides by location (sept '23)
 trips_sept23 = trips_cln[ trips_cln["Start Yr-Mon"] == "2023-09" ]
@@ -138,7 +138,7 @@ plt.savefig(os.path.join("visualizations", "ride_dur_by_loc_sept23.png"))
 
 
 
-#%%
+
 
 # number of stations and bikes by month
 

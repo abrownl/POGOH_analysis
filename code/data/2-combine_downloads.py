@@ -12,7 +12,7 @@ toplevel_dir = os.path.join("C:", os.sep, "Users", "Allie", "Projects", "Other",
 os.chdir(toplevel_dir)
 
 
-#%%
+
 ##### Combine all POGOH and healthy-ride trip data #####
 
 ### First: remove thousands of empty rows from 2019 q3 data
@@ -85,7 +85,7 @@ print("Saved: /data/processed/pogoh_combined.csv")
 
 
 
-#%%
+
 ##### Combine station data for all years #####
 
 ### First, put 2021 q2 data in format to match other files

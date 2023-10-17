@@ -14,7 +14,7 @@ dirpath = os.path.join("C:", os.sep, "Users", "Allie", "Projects", "Other", "POG
 os.chdir(dirpath)
 
 
-#%%
+
 ### Trip Data
 # read in trip data
 trip_data = pd.read_csv(os.path.join("data", "processed", "trips_combined.csv"), 
@@ -76,7 +76,7 @@ trips_cln = trips.drop(drop_index)
 trips_cln.to_csv(os.path.join("data", "processed", "trips_clean.csv"))
 print("Saved: trips_clean.csv")
 
-#%%
+
 
 # read in station data
 stn_data = pd.read_csv(os.path.join("data", "processed", "stations_combined.csv"))
