@@ -86,17 +86,17 @@ stn_data = stn_data.sort_values(by=["Date", "Id"])
 
 
 # count total stations and total docks per month
-stns_by_mon = stn_data.groupby("Date", as_index=False).agg({"Id": 'count',
+stns_by_month = stn_data.groupby("Date", as_index=False).agg({"Id": 'count',
                                                             "Total Docks": "sum"})
-stns_by_mon = stns_by_mon.rename(columns = {'Id':'Station Count'})
+stns_by_month = stns_by_month.rename(columns = {'Id':'Station Count'})
 
 # fill in missing dates with values from previous dates
-stns_by_mon["Date"] = pd.to_datetime(stns_by_mon["Date"]).dt.to_period('M')
-stns_by_mon = stns_by_mon.set_index("Date", drop=True)
+stns_by_month["Date"] = pd.to_datetime(stns_by_month["Date"]).dt.to_period('M')
+stns_by_month = stns_by_month.set_index("Date", drop=True)
 
-idx = pd.period_range("2015-01","2023-09", freq='M')
-stns_by_mon = stns_by_mon.reindex(idx, method='ffill')
+idx = pd.period_range("2015-05","2023-09", freq='M')
+stns_by_month = stns_by_month.reindex(idx, method='ffill')
 
 # save
-stns_by_mon.to_csv(os.path.join("data", "processed", "stations_by_month.csv"))
+stns_by_month.to_csv(os.path.join("data", "processed", "stations_by_month.csv"))
 print("Saved: stations_by_month.csv")

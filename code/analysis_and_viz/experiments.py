@@ -18,15 +18,8 @@ trips_cln = pd.read_csv(os.path.join("data", "processed", "trips_clean.csv"),
                         dtype={'Closed Status': str})
 trips_cln = trips_cln.drop(columns = {"Unnamed: 0"}) 
 
-stns_by_mon = pd.read_csv(os.path.join("data", "processed", "stations_by_month.csv"))
-stns_by_mon = stns_by_mon.rename(columns = {"Unnamed: 0":"Date"})
-
-
 trips_cln["Duration"].describe()
 
-trips_mean = trips_cln["Duration"].mean()
-trips_med = trips_cln["Duration"].median()
-trips_sd = trips_cln["Duration"].std()
 
 
 # plot histograms of ride durations
@@ -37,11 +30,18 @@ plt.title("Frequency of Ride Durations, All Trips")
 plt.savefig(os.path.join("visualizations", "rides_hist.png"))
 
 # all rides together isn't a v helpful graphic; break up by length of rides
+x0 = trips_cln[ trips_cln["Duration"] <= 3600 ]["Duration"]
+plt.figure()
+plt.hist(x0, bins=100)
+plt.xlabel("Trip Duration")
+plt.title("Frequency of Trip Duration, Short Trips (< 1 hr)")
+plt.savefig(os.path.join("visualizations", "very_short_rides.png"))
+
 x1 = trips_cln[ trips_cln["Duration"] <= 7200 ]["Duration"]
 plt.figure()
 plt.hist(x1, bins=100)
 plt.xlabel("Trip Duration")
-plt.title("Frequency of Trip Durations, Short Trips(<= 2 hrs)")
+plt.title("Frequency of Trip Durations, Short Trips (<= 2 hrs)")
 plt.savefig(os.path.join("visualizations", "short_rides.png"))
 
 x2 = trips_cln[ trips_cln["Duration"] > 7200 ]["Duration"]
@@ -118,7 +118,6 @@ plt.title("Number of Trips by Starting Station, September 2023")
 plt.savefig(os.path.join("visualizations", "rides_by_loc_sept23.png"), bbox_inches='tight')
 
 # avg ride duration by location (pogoh only)
-
 trips_loc_dur = trips_sept23.groupby("Start Station Name", 
                                     as_index=False)["Duration"].agg(['mean',
                                                                      'median', 
@@ -137,23 +136,42 @@ plt.savefig(os.path.join("visualizations", "ride_dur_by_loc_sept23.png"))
 
 
 
-
-
-
 # number of stations and bikes by month
+stns_by_month = pd.read_csv(os.path.join("data", "processed", "stations_by_month.csv"))
+stns_by_month = stns_by_month.rename(columns = {"Unnamed: 0":"Date"})
 
 plt.figure()
-plt.plot(stns_by_mon["Date"], stns_by_mon["Station Count"])
+plt.plot(stns_by_month["Date"], stns_by_month["Station Count"])
 plt.xlabel("Month")
 plt.ylabel("Total Number of Stations")
 plt.xticks(np.arange(1,100,step=6),rotation = 90)
 plt.title("Total Trips by Month")
-
 plt.savefig(os.path.join("visualizations", "stations_by_month.png"))
 
 plt.figure()
-plt.plot(stns_by_mon["Date"], stns_by_mon["Total Docks"])
+plt.plot(stns_by_month["Date"], stns_by_month["Total Docks"])
 plt.xlabel("Month")
 plt.ylabel("Total Number of Docks")
 plt.xticks(np.arange(1,100,step=6), rotation=90)
 plt.savefig(os.path.join("visualizations", "docks_by_month.png"))
+
+
+
+# trips and stations by month
+plt.figure()
+plt.plot(stns_by_month["Date"], stns_by_month["Station Count"])
+plt.plot(stns_by_month["Date"], trips_by_month)
+
+fig, ax1 = plt.subplots()
+ax2 = ax1.twinx()
+ax1.plot(stns_by_month["Date"], stns_by_month["Station Count"], color="orange")
+ax2.plot(stns_by_month["Date"], trips_by_month, color="royalblue")
+plt.xticks(np.arange(1, 100, step=6))
+ax1.set_xticklabels(stns_by_month["Date"][np.arange(1,100,6)], rotation=90)
+ax1.set_ylabel("Total Stations", color="orange")
+ax2.set_ylabel("Total Trips", color="royalblue")
+plt.title("Trips and Stations by Month")
+plt.savefig(os.path.join("visualizations","stns_and_trips_by_month.png"),
+            bbox_inches="tight")
+
+
