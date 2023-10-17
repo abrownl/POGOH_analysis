@@ -1,0 +1,6 @@
+archive/
+
+.spyproject/
+
+data/processed/trips_clean.csv
+data/processed/trips_combined.csv
