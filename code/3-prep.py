@@ -15,7 +15,7 @@ os.chdir(dirpath)
 
 
 
-### Trip Data
+### Trip Data ###
 # read in trip data
 trip_data = pd.read_csv(os.path.join("data", "processed", "trips_combined.csv"), 
                                      dtype={'Closed Status': str})
@@ -79,7 +79,7 @@ print("Saved: trips_clean.csv")
 
 
 
-# read in station data
+### Station Data ###
 stn_data = pd.read_csv(os.path.join("data", "processed", "stations_combined.csv"))
 
 # order by date and station id

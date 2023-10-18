@@ -139,6 +139,7 @@ plt.savefig(os.path.join("visualizations", "ride_dur_by_loc_sept23.png"), bbox_i
 
 
 
+
 # number of stations and bikes by month
 stns_by_month = pd.read_csv(os.path.join("data", "processed", "stations_by_month.csv"))
 stns_by_month = stns_by_month.rename(columns = {"Unnamed: 0":"Date"})
@@ -165,7 +166,8 @@ plt.savefig(os.path.join("visualizations", "docks_by_month.png"), bbox_inches="t
 
 
 
-# trips and stations by month
+
+# trips AND stations by month
 fig, ax1 = plt.subplots()
 ax2 = ax1.twinx()
 ax1.plot(stns_by_month["Date"], stns_by_month["Station Count"], color="orange")
