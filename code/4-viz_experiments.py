@@ -18,7 +18,6 @@ trips_cln = pd.read_csv(os.path.join("data", "processed", "trips_clean.csv"),
                         dtype={'Closed Status': str})
 trips_cln = trips_cln.drop(columns = {"Unnamed: 0"}) 
 
-trips_cln["Duration"].describe()
 
 
 
@@ -150,6 +149,7 @@ fig, ax = plt.subplots()
 ax.plot(stns_by_month["Date"], stns_by_month["Station Count"])
 ax.set_xlabel("Month")
 ax.set_ylabel("Total Number of Stations")
+ax.set_ylim(bottom = 0)
 ax.set_xticks(np.arange(1,100,step=6))
 ax.set_xticklabels(labels, rotation=90)
 ax.set_title("Total Stations by Month")
@@ -159,6 +159,7 @@ fig, ax = plt.subplots()
 ax.plot(stns_by_month["Date"], stns_by_month["Total Docks"])
 ax.set_xlabel("Month")
 ax.set_ylabel("Total Number of Docks")
+ax.set_ylim(bottom = 0)
 ax.set_xticks(np.arange(1,100,step=6))
 ax.set_xticklabels(labels, rotation=90)
 ax.set_title("Total Bike Docks by Month")
@@ -175,9 +176,23 @@ ax2.plot(stns_by_month["Date"], trips_by_month, color="royalblue")
 plt.xticks(np.arange(1, 100, step=6))
 ax1.set_xticklabels(stns_by_month["Date"][np.arange(1,100,6)], rotation=90)
 ax1.set_ylabel("Total Stations", color="orange")
+ax1.set_ylim(bottom = 0)
 ax2.set_ylabel("Total Trips", color="royalblue")
 plt.title("Trips and Stations by Month")
 plt.savefig(os.path.join("visualizations","stns_and_trips_by_month.png"),
             bbox_inches="tight")
 
+# trips and DOCKS by month
+fig, ax1 = plt.subplots()
+ax2 = ax1.twinx()
+ax1.plot(stns_by_month["Date"], stns_by_month["Total Docks"], color="orange")
+ax2.plot(stns_by_month["Date"], trips_by_month, color="royalblue")
+plt.xticks(np.arange(1, 100, step=6))
+ax1.set_xticklabels(stns_by_month["Date"][np.arange(1,100,6)], rotation=90)
+ax1.set_ylabel("Total Docks", color="orange")
+ax1.set_ylim(bottom = 0)
+ax2.set_ylabel("Total Trips", color="royalblue")
+plt.title("Number of Trips and Number of Bike Docks by Month")
+plt.savefig(os.path.join("visualizations","docks_and_trips_by_month.png"),
+            bbox_inches="tight")
 
