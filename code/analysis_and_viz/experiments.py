@@ -23,40 +23,40 @@ trips_cln["Duration"].describe()
 
 
 # plot histograms of ride durations
-plt.figure()
-plt.hist(trips_cln["Duration"], bins=100)
-plt.xlabel("Trip Duration")
-plt.title("Frequency of Ride Durations, All Trips")
-plt.savefig(os.path.join("visualizations", "rides_hist.png"))
+fig, ax = plt.subplots()
+ax.hist(trips_cln["Duration"]/60, bins=100)
+ax.set_xlabel("Trip Duration (min)")
+ax.set_title("Frequency of Ride Durations, All Trips")
+fig.savefig(os.path.join("visualizations", "rides_hist.png"))
 
 # all rides together isn't a v helpful graphic; break up by length of rides
-x0 = trips_cln[ trips_cln["Duration"] <= 3600 ]["Duration"]
-plt.figure()
-plt.hist(x0, bins=100)
-plt.xlabel("Trip Duration")
-plt.title("Frequency of Trip Duration, Short Trips (< 1 hr)")
-plt.savefig(os.path.join("visualizations", "very_short_rides.png"))
+x0 = trips_cln[ trips_cln["Duration"] <= 3600 ]["Duration"]/60
+fig, ax = plt.subplots()
+ax.hist(x0, bins=100)
+ax.set_xlabel("Trip Duration (min)")
+ax.set_title("Frequency of Trip Duration, Short Trips (< 1 hr)")
+fig.savefig(os.path.join("visualizations", "very_short_rides.png"))
 
-x1 = trips_cln[ trips_cln["Duration"] <= 7200 ]["Duration"]
-plt.figure()
-plt.hist(x1, bins=100)
-plt.xlabel("Trip Duration")
-plt.title("Frequency of Trip Durations, Short Trips (<= 2 hrs)")
-plt.savefig(os.path.join("visualizations", "short_rides.png"))
+x1 = trips_cln[ trips_cln["Duration"] <= 7200 ]["Duration"]/60
+fig, ax = plt.subplots()
+ax.hist(x1, bins=100)
+ax.set_xlabel("Trip Duration (min)")
+ax.set_title("Frequency of Trip Durations, Short Trips (<= 2 hrs)")
+fig.savefig(os.path.join("visualizations", "short_rides.png"))
 
-x2 = trips_cln[ trips_cln["Duration"] > 7200 ]["Duration"]
-plt.figure()
-plt.hist(x2, bins=100)
-plt.xlabel("Trip Duration")
-plt.title("Frequency of Trip Durations, Short Trips(> 2 hrs)")
-plt.savefig(os.path.join("visualizations", "long_rides.png"))
+x2 = trips_cln[ trips_cln["Duration"] > 7200 ]["Duration"]/60
+fig, ax = plt.subplots()
+ax.hist(x2, bins=100)
+ax.set_xlabel("Trip Duration (min)")
+ax.set_title("Frequency of Trip Durations, Long Trips(> 2 hrs)")
+fig.savefig(os.path.join("visualizations", "long_rides.png"))
 
-x3 = trips_cln[ trips_cln["Duration"] > 86400 ]["Duration"]
-plt.figure()
-plt.hist(x3, bins=100)
-plt.xlabel("Trip Duration")
-plt.title("Frequency of Trip Durations, Very Long Trips (> 24 hrs)")
-plt.savefig(os.path.join("visualizations", "v_long_rides.png"))
+x3 = trips_cln[ trips_cln["Duration"] > 86400 ]["Duration"]/60
+fig, ax = plt.subplots()
+ax.hist(x3, bins=100)
+ax.set_xlabel("Trip Duration (min)")
+ax.set_title("Frequency of Trip Durations, Very Long Trips (> 24 hrs)")
+fig.savefig(os.path.join("visualizations", "v_long_rides.png"))
 
 
 
@@ -67,14 +67,17 @@ trips_by_month = trips_cln.groupby(["Start Yr-Mon"])["Start Yr-Mon"].size()
 
 x = trips_by_month.index
 y = trips_by_month
-plt.figure()
-plt.plot(x,y)
-plt.scatter(x,y)
-plt.gca().xaxis.grid(True)
-plt.xlabel("Month")
-plt.ylabel("Number of Trips")
-plt.xticks(np.arange(1,100,step=6),rotation = 90)
-plt.title("Total Trips by Month")
+labels = trips_by_month.index[np.arange(1,100,6)]
+
+fig, ax = plt.subplots()
+ax.plot(x,y)
+ax.scatter(x,y)
+ax.set_xticks(np.arange(1,100,step=6))
+ax.set_xticklabels(labels, rotation=90)
+ax.xaxis.grid(True)
+ax.set_xlabel("Month")
+ax.set_ylabel("Number of Trips")
+ax.set_title("Total Trips by Month")
 plt.savefig(os.path.join("visualizations", "rides_per_month.png"), bbox_inches="tight")
 
 
@@ -86,15 +89,15 @@ x = trips_type[ trips_type["Rider Type"] == "CASUAL"]["Start Yr-Mon"]
 y_cas = trips_type[ trips_type["Rider Type"] == "CASUAL"]["Duration"]
 y_mem = trips_type[ trips_type["Rider Type"] == "MEMBER"]["Duration"]
 
-plt.figure()
-plt.plot(x, y_cas, label="Casual")
-plt.plot(x, y_mem, label="Member")
-plt.xticks(rotation = 90)
-plt.legend(loc="upper left")
-plt.xlabel("Month")
-plt.ylabel("Number of Trips")
-plt.title("Number of Trips per Month, by Customer Type")
-plt.savefig(os.path.join("visualizations", "rides_by_month_and_ridertype.png"), bbox_inches="tight")
+fig, ax = plt.subplots()
+ax.plot(x, y_cas, label="Casual")
+ax.plot(x, y_mem, label="Member")
+ax.set_xticklabels(x, rotation=90)
+ax.legend(loc="upper left")
+ax.set_xlabel("Month")
+ax.set_ylabel("Number of Trips")
+ax.set_title("Number of Trips per Month, by Customer Type")
+fig.savefig(os.path.join("visualizations", "rides_by_month_and_ridertype.png"), bbox_inches="tight")
 
 
 
@@ -111,11 +114,11 @@ rentals = trips_loc["size"]
 fig, ax = plt.subplots(figsize=(5,10))
 ax.barh(stns, rentals)
 ax.invert_yaxis()
+ax.set_xlabel("Number of Trips")
+ax.set_ylabel("Start Station Name")
 plt.yticks(fontsize=8)
-plt.xlabel("Number of Trips")
-plt.ylabel("Start Station Name")
-plt.title("Number of Trips by Starting Station, September 2023")
-plt.savefig(os.path.join("visualizations", "rides_by_loc_sept23.png"), bbox_inches='tight')
+ax.set_title("Number of Trips by Starting Station, September 2023")
+fig.savefig(os.path.join("visualizations", "rides_by_loc_sept23.png"), bbox_inches='tight')
 
 # avg ride duration by location (pogoh only)
 trips_loc_dur = trips_sept23.groupby("Start Station Name", 
@@ -128,11 +131,11 @@ trips_loc_dur[["mean", "median"]] = trips_loc_dur[["mean", "median"]]/60
 fig, ax = plt.subplots(figsize=(5,10))
 ax.barh(trips_loc_dur["Start Station Name"], trips_loc_dur["mean"])
 ax.invert_yaxis()
+ax.set_xlabel("Mean Trip Duration (min)")
+ax.set_ylabel("Start Station Name")
 plt.yticks(fontsize=8)
-plt.xlabel("Mean Trip Duration")
-plt.ylabel("Start Station Name")
-plt.title("Mean Duration of Trip by Starting Station, September 2023")
-plt.savefig(os.path.join("visualizations", "ride_dur_by_loc_sept23.png"))
+ax.set_title("Mean Duration of Trip by Starting Station, September 2023")
+plt.savefig(os.path.join("visualizations", "ride_dur_by_loc_sept23.png"), bbox_inches="tight")
 
 
 
@@ -140,28 +143,29 @@ plt.savefig(os.path.join("visualizations", "ride_dur_by_loc_sept23.png"))
 stns_by_month = pd.read_csv(os.path.join("data", "processed", "stations_by_month.csv"))
 stns_by_month = stns_by_month.rename(columns = {"Unnamed: 0":"Date"})
 
-plt.figure()
-plt.plot(stns_by_month["Date"], stns_by_month["Station Count"])
-plt.xlabel("Month")
-plt.ylabel("Total Number of Stations")
-plt.xticks(np.arange(1,100,step=6),rotation = 90)
-plt.title("Total Trips by Month")
-plt.savefig(os.path.join("visualizations", "stations_by_month.png"))
+labels = stns_by_month["Date"][np.arange(1,100,6)]
 
-plt.figure()
-plt.plot(stns_by_month["Date"], stns_by_month["Total Docks"])
-plt.xlabel("Month")
-plt.ylabel("Total Number of Docks")
-plt.xticks(np.arange(1,100,step=6), rotation=90)
-plt.savefig(os.path.join("visualizations", "docks_by_month.png"))
+fig, ax = plt.subplots()
+ax.plot(stns_by_month["Date"], stns_by_month["Station Count"])
+ax.set_xlabel("Month")
+ax.set_ylabel("Total Number of Stations")
+ax.set_xticks(np.arange(1,100,step=6))
+ax.set_xticklabels(labels, rotation=90)
+ax.set_title("Total Stations by Month")
+plt.savefig(os.path.join("visualizations", "stations_by_month.png"), bbox_inches="tight")
+
+fig, ax = plt.subplots()
+ax.plot(stns_by_month["Date"], stns_by_month["Total Docks"])
+ax.set_xlabel("Month")
+ax.set_ylabel("Total Number of Docks")
+ax.set_xticks(np.arange(1,100,step=6))
+ax.set_xticklabels(labels, rotation=90)
+ax.set_title("Total Bike Docks by Month")
+plt.savefig(os.path.join("visualizations", "docks_by_month.png"), bbox_inches="tight")
 
 
 
 # trips and stations by month
-plt.figure()
-plt.plot(stns_by_month["Date"], stns_by_month["Station Count"])
-plt.plot(stns_by_month["Date"], trips_by_month)
-
 fig, ax1 = plt.subplots()
 ax2 = ax1.twinx()
 ax1.plot(stns_by_month["Date"], stns_by_month["Station Count"], color="orange")

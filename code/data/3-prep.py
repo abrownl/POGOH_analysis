@@ -58,16 +58,17 @@ for yr in range(2015, 2024):
     x = trips[ trips["Start Year"] == yr ]["Start Month"]
     y = trips[ trips["Start Year"] == yr ]["Duration"]
     
-    plt.figure()
-    plt.scatter(x,y)
-    plt.axhline(y=200000, color="r")
-    plt.savefig(os.path.join(dirpath, "visualizations", filename))  
+    fig, ax = plt.subplots()
+    ax.scatter(x,y)
+    ax.axhline(y=200000, color="r")
+    ax.axhline(y=175000, color="orange")
+    fig.savefig(os.path.join(dirpath, "visualizations", filename))  
 
 # 200K looks like a good max cutoff?
 # no, 175K better
-plt.figure()
-plt.hist(trips[trips["Duration"] > 175000]["Duration"], bins=100)
-plt.savefig(os.path.join("visualizations", "rides_over_175K.png"))
+fig, ax = plt.subplots()
+ax.hist(trips[trips["Duration"] > 175000]["Duration"], bins=100)
+fig.savefig(os.path.join("visualizations", "rides_over_175K.png"))
 
 drop_index = trips[ trips["Duration"] > 175000 ].index
 trips_cln = trips.drop(drop_index)
